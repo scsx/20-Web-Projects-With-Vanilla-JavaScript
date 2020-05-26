@@ -10,7 +10,8 @@ const figureParts = document.querySelectorAll('.figure-part');
 const words = ['application', 'programming', 'interface', 'wizard'];
 
 let selectedWord = words[Math.floor(Math.random() * words.length)];
-const correctLetters = ['w', 'i', 'z', 'a', 'r', 'd'];
+// const correctLetters = ['w', 'i', 'z', 'a', 'r', 'd'];
+const correctLetters = [];
 const wrongLetters = [];
 
 // Show hidden word
@@ -25,12 +26,79 @@ function displayWord() {
         }
     `;
 
-    const innerWord = wordEl.innerText.replace(/\n/g, ''); // remove line break
+    const innerWord = wordEl.innerText.replace(/\n/g, ''); // remove line breaks
 
     if (innerWord === selectedWord) {
         finalMessage.innerText = 'Congratulations! You won! :)';
         popup.style.display = 'flex';
     }
 }
+
+function updateWrongLettersEl() {
+    // Display wrong letters
+    wrongLettersEl.innerHTML = `
+        ${wrongLetters.length > 0 ? '<p>Wrong</p>' : ''}
+        ${wrongLetters.map(letter => `<span>${letter}</span>`)}
+    `;
+
+    // Display parts
+    figureParts.forEach((part, index) => {
+        const errors = wrongLetters.length;
+
+        if (index < errors) {
+            part.style.display = 'block';
+        } else {
+            part.style.display = 'none';
+        }
+    });
+
+    // Check if lost
+    if(wrongLetters.length === figureParts.length) {
+        finalMessage.innerText = 'Game Over! :(';
+        popup.style.display = 'flex';
+    }
+}
+
+function showNotification() {
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2000);
+}
+
+// Keydown letter press
+window.addEventListener('keydown', e => {
+    if (e.keyCode >= 65 && e.keyCode <= 90) {
+        const letter = e.key;
+        if(selectedWord.includes(letter)) {
+            if(!correctLetters.includes(letter)) { // if letter is not already there
+                correctLetters.push(letter);
+                displayWord();
+            } else {
+                showNotification();
+            }
+        } else {
+            if(!wrongLetters.includes(letter)) { // if letter is not already there
+                wrongLetters.push(letter);
+                updateWrongLettersEl();
+            } else {
+                showNotification();
+            }
+        }
+    }
+});
+
+// Restart game
+playAgainBtn.addEventListener('click', () => {
+    // Reset arrays
+    correctLetters.splice(0);
+    wrongLetters.splice(0);
+
+    selectedWord = words[Math.floor(Math.random() * words.length)];
+    displayWord();
+
+    updateWrongLettersEl();
+    popup.style.display = 'none';
+});
 
 displayWord();
