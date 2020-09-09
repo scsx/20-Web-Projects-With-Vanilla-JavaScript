@@ -22,6 +22,11 @@ h1 {
     text-align: center;
 }
 
+h1 small {
+    display: block;
+    font-size: 50%;
+}
+
 .filter-container {
     margin-top: 20px;
     width: 80vw;
@@ -48,6 +53,8 @@ h1 {
 
 .post .post-title {
     margin: 0;
+    padding: 4px 8px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
 }
 
 .post .post-body {
