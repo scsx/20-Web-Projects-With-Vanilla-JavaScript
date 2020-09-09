@@ -2,19 +2,21 @@ const postsContainer = document.getElementById("posts-container");
 const loading = document.querySelector(".loader");
 const filter = document.getElementById("filter");
 
-window.addEventListener('scroll', () => {
-    // destructuring: const {}
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-    if(scrollTop + clientHeight >= scrollHeight) {
-        showLoading();
-    }
-})
-
 let limit = 5;
 let page = 1;
 
-// fetch posts
+filter.addEventListener('input', filterPosts);
+// Scroll
+window.addEventListener("scroll", () => {
+    // destructuring: const {}
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+        showLoading();
+    }
+});
+
+// Fetch posts
 async function getPosts() {
     const res = await fetch(
         `https://jsonplaceholder.typicode.com/posts?_limit=${limit}&_page=${page}`
@@ -47,17 +49,25 @@ async function showPosts() {
 }
 
 // Show loader & fetch more posts
-function showLoading() {
-    loading.classList.add('show');
+// Function in the course is not correct and was changed by Tadek's comment:
+// https://www.udemy.com/course/web-projects-with-vanilla-javascript/learn/lecture/17842326#questions/9601170
+let isLoading = false;
+async function showLoading() {
+    if (isLoading) {
+        return;
+    }
+
+    page++;
+    isLoading = true;
+    loading.classList.add("show");
+
+    await showPosts(); // <-- key part!!!
+
+    isLoading = false; // only then do we enable further loading
+    // I added a quick setTimeout so we can see the loader at all
     setTimeout(() => {
-        loading.classList.remove('show');
-        setTimeout(() => { 
-            page++;
-            showPosts();
-            console.log(onePageAtATime, page);
-        }, 500);
-    }, 1000);
-    
+        loading.classList.remove("show");
+    }, 200);
 }
 
 // Show initial posts
@@ -71,4 +81,21 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+// Filter posts
+function filterPosts(e) {
+    const term = e.target.value.toUpperCase();
+    const posts = document.querySelectorAll('.post');
+
+    posts.forEach(post => {
+        const title = post.querySelector('.post-title').innerText.toUpperCase();
+        const body = post.querySelector('.post-body').innerText.toUpperCase();
+
+        if(title.indexOf(term) > -1 || body.indexOf(term)  > -1) {
+            post.style.display = 'flex';
+        } else {
+            post.style.display = 'none';
+        }
+    })
 }
