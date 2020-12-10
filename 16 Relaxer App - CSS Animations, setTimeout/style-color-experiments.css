@@ -1,0 +1,17 @@
+body {
+    background: conic-gradient(red, orange, yellow, green, blue);
+}
+
+.circle {
+    background: conic-gradient(red, orange, yellow, green, blue);
+}
+
+.gradient-circle {
+    transform: rotate(180deg);
+    background: conic-gradient(red 0%,
+            yellow 40%,
+            #fff 40%,
+            #fff 60%,
+            green 60%,
+            blue 100%);
+}
