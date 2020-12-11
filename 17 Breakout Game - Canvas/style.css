@@ -43,6 +43,7 @@ canvas {
     background: none;
     color: #fff;
     border-radius: 5px;
+    letter-spacing: 2px;
 }
 
 .btn:focus {
