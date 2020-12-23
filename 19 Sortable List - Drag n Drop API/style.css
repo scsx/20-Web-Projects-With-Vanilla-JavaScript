@@ -11,7 +11,7 @@
 }
 
 body {
-    background-color: #fff;
+    background-color: #e4e4e3;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,6 +19,14 @@ body {
     height: 100vh;
     margin: 0;
     font-family: 'Lato', sans-serif;
+}
+
+h1 {
+    color: #092063;
+}
+
+h1 small {
+    font-size: 33%;
 }
 
 .draggable-list {
